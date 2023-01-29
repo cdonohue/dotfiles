@@ -145,63 +145,14 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-lazynvm() {
-  unset -f nvm node npm npx
-  export NVM_DIR=~/.nvm
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-  if [ -f "$NVM_DIR/bash_completion" ]; then
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-  fi
-}
-
-nvm() {
-  lazynvm 
-  nvm $@
-}
- 
-node() {
-  lazynvm
-  node $@
-}
- 
-npm() {
-  lazynvm
-  npm $@
-}
-
-npx() {
-  lazynvm
-  npx $@
-}
-
-#
-# Run 'nvm use' automatically every time there's
-# a .nvmrc file in the directory. Also, revert to default
-# version when entering a directory without .nvmrc
-#
-nvm_autouse() {
-# if [[ $PWD == $PREV_PWD ]]; then
-#    return
-# fi
-
-PREV_PWD=$PWD
-if [[ -f ".nvmrc" ]]; then
-   nvm use 
-   NVM_DIRTY=true
-elif [[ $NVM_DIRTY = true ]]; then
-   nvm use default
-   NVM_DIRTY=false
-fi
-}
-nvm_autouse &>/dev/null
-chpwd_functions=(${chpwd_functions[@]} "nvm_autouse")
+# pnpm
+export PNPM_HOME="/Users/chad/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+# pnpm end
 
 # Homebrew
 export PATH=/opt/homebrew/bin:$PATH
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
