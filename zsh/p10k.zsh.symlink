@@ -539,7 +539,7 @@ function prompt_my_vcs() {
   # p10k segment -f 7 -b 0 -t $res
 
   (( VCS_STATUS_NUM_UNSTAGED || VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 7 -b 0 -t ""
-  (( !VCS_STATUS_NUM_UNSTAGED || !VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 8 -b 0 -t "clean"
+  (( !VCS_STATUS_NUM_UNSTAGED && !VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 8 -b 0 -t " no changes"
   # (( VCS_STATUS_NUM_UNTRACKED  )) && p10k segment -f 7 -b 0 -t " ${VCS_STATUS_NUM_UNTRACKED}"
 
   # (( VCS_STATUS_COMMITS_AHEAD  )) && p10k segment -f 7 -b 8   -t 'arrow-up'
