@@ -199,7 +199,7 @@
   # Red prompt symbol if the last command failed.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=196
   # Default prompt symbol.
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='❯'
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='󰅂'
   # Prompt symbol in command vi mode.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VICMD_CONTENT_EXPANSION='❮'
   # Prompt symbol in visual vi mode.
@@ -351,7 +351,7 @@
   typeset -g POWERLEVEL9K_DIR_CLASSES=()
 
   # Custom prefix.
-  typeset -g POWERLEVEL9K_DIR_PREFIX=' '
+  typeset -g POWERLEVEL9K_DIR_PREFIX='  '
 
   # #####################################[ vcs: git status ]######################################
   # # Version control background colors.
@@ -503,7 +503,7 @@ typeset -g POWERLEVEL9K_VCS_CONTENT_EXPANSION=
 typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=
 typeset -g POWERLEVEL9K_VCS_DISABLE_GITSTATUS_FORMATTING=true
 # Branch icon. Set this parameter to '\UE0A0 ' for the popular Powerline branch icon.
-typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='שׂ '
+typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=' '
 
 # Untracked files icon. It's really a question mark, your font isn't broken.
 # Change the value of this parameter to show a different icon.
@@ -514,7 +514,12 @@ function prompt_my_vcs() {
   emulate -L zsh
   [[ $VCS_STATUS_RESULT == ok-* ]] || return
 
-  
+  if [[ -n $VCS_STATUS_LOCAL_BRANCH ]]; then
+    (( VCS_STATUS_COMMITS_BEHIND )) && p10k segment -f 0 -b 3 -t ${POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_LOCAL_BRANCH//\%/%%}
+    (( !VCS_STATUS_COMMITS_BEHIND )) && p10k segment -f 7 -b 8 -t ${POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_LOCAL_BRANCH//\%/%%}
+  else
+    p10k segment -f 0 -b 6 -t "@${VCS_STATUS_COMMIT[1,8]//\%/%%}"
+  fi
 
   local res
   # ⇣42 if behind the remote.
@@ -528,21 +533,11 @@ function prompt_my_vcs() {
   # ⇢42 if ahead of the push remote; no leading space if also behind: ⇠42⇢42.
   (( VCS_STATUS_PUSH_COMMITS_AHEAD  )) && res+="⇢${VCS_STATUS_PUSH_COMMITS_AHEAD}"
   # *42 if have stashes.
-  (( VCS_STATUS_STASHES        )) && res+=" *${VCS_STATUS_STASHES}"
-  # (( VCS_STATUS_NUM_UNSTAGED   )) && res+="  ${VCS_STATUS_NUM_UNSTAGED}"
-  # (( VCS_STATUS_NUM_UNTRACKED  )) && res+="  ${VCS_STATUS_NUM_UNTRACKED}"
+  (( VCS_STATUS_STASHES        )) && res+="*"
+  (( VCS_STATUS_NUM_UNSTAGED   )) && res+="!"
+  (( VCS_STATUS_NUM_UNTRACKED  )) && res+="?"
 
-  if [[ -n $VCS_STATUS_LOCAL_BRANCH ]]; then
-    (( VCS_STATUS_COMMITS_BEHIND )) && p10k segment -f 0 -b 2 -t ${POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_LOCAL_BRANCH//\%/%%}${res}
-    (( !VCS_STATUS_COMMITS_BEHIND )) && p10k segment -f 7 -b 8 -t ${POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_LOCAL_BRANCH//\%/%%}${res}
-  else
-    p10k segment -f 7 -b 8 -t @${POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_COMMIT[1,8]//\%/%%}${res}
-  fi
-
-  local changes=''
-  (( VCS_STATUS_NUM_UNSTAGED )) && changes+="!"
-  (( VCS_STATUS_NUM_UNTRACKED )) && changes+="?"
-  (( VCS_STATUS_NUM_UNSTAGED || VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 7 -b 0 -t "${changes}"
+  (( VCS_STATUS_NUM_UNSTAGED || VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 7 -b 0 -t "${res}"
   (( !VCS_STATUS_NUM_UNSTAGED && !VCS_STATUS_NUM_UNTRACKED )) && p10k segment -f 8 -b 0 -t ""
 }
 
