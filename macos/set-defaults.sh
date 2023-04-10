@@ -34,5 +34,6 @@ defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Dock enhancements
 defaults write com.apple.dock static-only -bool TRUE; killall Dock
-defaults write com.apple.Dock autohide-delay -float 0.0001; killall Dock
+defaults write com.apple.dock autohide-delay -float 0.0001; killall Dock
+defaults write com.apple.dock autohide-time-modifier -int 0.0001; killall Dock
 defaults write com.apple.dock mineffect suck; killall Dock
