@@ -137,23 +137,8 @@ install_dotfiles () {
   done
 }
 
-sync_iterm_config () {
-  info 'installing iterm config'
-
-  local overwrite_all=false backup_all=false skip_all=false
-
-  iterm_config_dir=$HOME/.iterm
-
-  mkdir -p $iterm_config_dir
-
-  src=$DOTFILES_ROOT/iterm/com.googlecode.iterm2.plist
-  dst="$iterm_config_dir/com.googlecode.iterm2.plist"
-  link_file "$src" "$dst"
-}
-
 setup_gitconfig
 install_dotfiles
-sync_iterm_config
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
